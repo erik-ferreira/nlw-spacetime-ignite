@@ -11,7 +11,7 @@ export function SignIn() {
       </div>
 
       <p className="max-w-[140px] text-sm leading-snug">
-        <span className="underlined">Crie sua conta</span> e salve suas memórias
+        <span className="underline">Crie sua conta</span> e salve suas memórias
       </p>
     </a>
   )
