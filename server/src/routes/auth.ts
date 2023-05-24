@@ -8,20 +8,34 @@ interface AccessTokenResponseProps {
 }
 
 export async function authRoutes(app: FastifyInstance) {
-  app.post("/register", async (request) => {
+  app.post("/register", async (request, reply) => {
     const bodySchema = z.object({
       code: z.string(),
+      flag: z.enum(["web", "mobile"]),
     })
 
-    const { code } = bodySchema.parse(request.body)
+    const { code, flag } = bodySchema.parse(request.body)
+
+    if (!flag) {
+      return reply.status(400).send({ message: "Param flag is required" })
+    }
+
+    const client_id =
+      flag === "web"
+        ? process.env.GITHUB_WEB_CLIENT_ID
+        : process.env.GITHUB_MOBILE_CLIENT_ID
+    const client_secret =
+      flag === "web"
+        ? process.env.GITHUB_WEB_CLIENT_SECRET
+        : process.env.GITHUB_MOBILE_CLIENT_SECRET
 
     const accessTokenResponse = await axios.post(
       "https://github.com/login/oauth/access_token",
       null,
       {
         params: {
-          client_id: process.env.GITHUB_CLIENT_ID,
-          client_secret: process.env.GITHUB_CLIENT_SECRET,
+          client_id,
+          client_secret,
           code,
         },
         headers: {

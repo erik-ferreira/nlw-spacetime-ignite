@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
 
   const registerResponse = await api.post("/register", {
     code,
+    flag: "web",
   })
 
   const { token }: RegisterResponseProps = registerResponse.data
